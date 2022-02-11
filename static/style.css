@@ -1,19 +1,23 @@
 .movie {
-  color: #fff;
+  color: rgba(0, 0, 0, 0.4);
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 41%;
   resize: none;
 }
 .btn-block {
   width: 15%;
   text-align: center;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 52%;
+  margin-top: 0%;
   color: #e4e0e0;
 }
-
 #content {
-  background-image: url("../static/image.jpg");
+  background: url("../static/image.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   background-color: #181818;
   font-family: "Noto Sans JP", sans-serif;
 }
