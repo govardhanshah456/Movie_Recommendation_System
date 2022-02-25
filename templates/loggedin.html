@@ -48,10 +48,9 @@ li a:hover {
 </style>
 <body>
   <ul>
-  <li><a href="default.asp">Home</a></li>
-  <li><a href="news.asp">News</a></li>
-  <li><a href="contact.asp">Contact</a></li>
-  <li><a href="about.asp">About</a></li>
+  <li><a href="/remove">Delete Movies</a></li>
+  <li><a href="/update">Update Movies</a></li>
+  <li style="float:right"><a class="active" href="/logout">Log Out</a></li>
 </ul>
 {% with messages = get_flashed_messages() %}
   {% if messages %}

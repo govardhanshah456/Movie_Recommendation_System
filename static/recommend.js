@@ -83,6 +83,7 @@ function movie_recs(movie_title,movie_id,my_api_key){
         var arr = [];
         for(const movie in movie_arr){
           arr.push(movie_arr[movie]);
+          // console.log(movie_arr[movie])
         }
         get_movie_details(movie_id,my_api_key,arr,movie_title);
       }
@@ -212,8 +213,11 @@ function get_movie_cast(movie_id,my_api_key){
         if(my_movie.cast.length>=10){
           top_cast = [0,1,2,3,4,5,6,7,8,9];
         }
-        else {
-          top_cast = [0,1,2,3,4];
+        else{
+          top_cast=[];
+          for(var i=0;i<my_movie.cast.length;i++){
+            top_cast.push(i);
+          }
         }
         for(var my_cast in top_cast){
           cast_ids.push(my_movie.cast[my_cast].id)
@@ -234,6 +238,7 @@ function get_movie_cast(movie_id,my_api_key){
 function get_movie_posters(arr,my_api_key){
   var arr_poster_list = []
   for(var m in arr) {
+    // console.log(arr[m]);
     $.ajax({
       type:'GET',
       url:'https://api.themoviedb.org/3/search/movie?api_key='+my_api_key+'&query='+arr[m],

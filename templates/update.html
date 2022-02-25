@@ -21,10 +21,37 @@
 <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='effect.css')}}">
 </head>
 <style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
 
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
 </style>
 <body>
-
+<ul>
+  <li><a href="/remove">Remove Movies</a></li>
+  <li><a href="/add">Add Movies</a></li>
+  <li style="float:right"><a class="active" href="/logout">Log Out</a></li>
+</ul>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
@@ -46,8 +73,7 @@
 	<div class="row">
 
 <div class="col-md-6 col-md-offset-3" id="login">
-<a class="link1" href="/add">Add Movies</a>
-<a class="link2" href="/remove">Remove Movies</a>
+
 <form action="/update1" method="POST">
 
 <div class="form-group">
