@@ -1,0 +1,116 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='effect.css')}}">
+</head>
+
+<body>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <script>alert("{{ message }}");</script>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<div class="container">
+<br/>
+<br/>
+<br/>
+<br/>
+
+<center> <b id="login-name">Remove Movie</b> </center>>
+
+	<div class="row">
+
+<div class="col-md-6 col-md-offset-3" id="login">
+<div class="row">
+  <div class="col-md-4">
+    <a class="btn btn-success btn-md btn-block" href="/add">Add</a>
+  </div>
+  <div class="col-md-4">
+    <a class="btn btn-warning btn-md btn-block" href="/remove">Update</a>
+  </div>
+  <div class="col-md-4">
+    <a class="btn btn-primary btn-md btn-block" href="/welcome">Welcome</a>
+  </div>
+</div>
+<form action="/remove" method="POST">
+
+<div class="form-group">
+<label class="user"> MovieName:  </label>
+
+
+<input type="text" class="form-control" id="text1" name="moviename" placeholder="Moviename" required>
+</div>
+
+
+
+<div class="form-group">
+
+<input type="submit" class="btn btn-success" value="submit" style="border-radius:0px;">
+<input type="reset" class="btn btn-danger" value="Reset" style="border-radius:0px;">
+
+    </div>
+    <br/><br/><br/>
+</form>
+{% if error %}
+	<script>
+		alert("{{error}}")
+	</script>
+{% endif %}
+<!-- {% if movie_added %}
+	<script>
+		alert("Movie added successfully")
+	</script>
+{% endif %} -->
+
+</div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</body>
+	</html>

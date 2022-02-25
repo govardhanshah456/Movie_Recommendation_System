@@ -1,0 +1,178 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='effect.css')}}">
+</head>
+<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
+</style>
+<body>
+  <ul>
+  <li><a href="default.asp">Home</a></li>
+  <li><a href="news.asp">News</a></li>
+  <li><a href="contact.asp">Contact</a></li>
+  <li><a href="about.asp">About</a></li>
+</ul>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <script>alert("{{ message }}");</script>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+<br/>
+<br/>
+<br/>
+<br/>
+<center> <b id="login-name">Enter New Movies Here</b> </center>>
+
+	<div class="row">
+
+<div class="col-md-6 col-md-offset-3" id="login">
+
+<form action="/add" method="POST">
+
+<div class="form-group">
+<label class="user"> MovieName:  </label>
+
+
+<input type="text" class="form-control" id="text1" name="moviename" placeholder="Moviename" required>
+</div>
+
+
+<div class="form-group">
+<label class="user"> Actor1: </label>
+
+<input type="text" class="form-control" id="text2" name="actor1" placeholder=" EnterActor1" required>
+
+</div>
+<div class="form-group">
+<label class="user"> Actor2: </label>
+
+<input type="text" class="form-control" id="text3" name="actor2" placeholder=" EnterActor2" required>
+
+</div>
+
+<div class="form-group">
+<label class="user"> Actor3: </label>
+<input type="text" class="form-control" id="text4" name="actor3" placeholder=" EnterActor3" required>
+</div>
+
+<div class="form-group">
+<label class="user">DirectorName: </label>
+<input type="text" class="form-control" id="text5" name="directorname" placeholder=" EnterDirectorName" required>
+</div>
+
+
+<div class="form-group label_001" >
+<label class="" required> Genre: </label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Crime">Crime</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Action">Action</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Thriller">Thriller</label>
+<label class="radio-inline"><input type="checkbox" name="optradio"value="Romance">Romance</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Sci-Fi">Sci-Fi</label>
+<label class="radio-inline"><input type="checkbox" name="optradio"value="Fantasy">Fantasy</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Documentary">Documentary</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Comedy">Comedy</label>
+<label class="radio-inline"><input type="checkbox" name="optradio"value="Drama">Drama</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Family">Family</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Sports">Sports</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Adventure">Adventure</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Horror">Horror</label>
+<label class="radio-inline"><input type="checkbox" name="optradio" value="Mystery">Mystery</label>
+</div>
+
+
+<div class="form-group">
+
+<input type="submit" class="btn btn-success" value="submit" style="border-radius:0px;">
+<input type="reset" class="btn btn-danger" value="Reset" style="border-radius:0px;">
+
+    </div>
+    <br/><br/><br/>
+</form>
+{% if error %}
+	<script>
+		alert("{{error}}")
+	</script>
+{% endif %}
+<!-- {% if movie_added %}
+	<script>
+		alert("Movie added successfully")
+	</script>
+{% endif %} -->
+
+</div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</body>
+	</html>

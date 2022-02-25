@@ -1,0 +1,227 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='effect.css')}}">
+</head>
+<style>
+
+</style>
+<body>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <script>alert("{{ message }}");</script>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+<br/>
+<br/>
+<br/>
+<br/>
+
+<center> <b id="login-name">Update Movies</b> </center>>
+
+	<div class="row">
+
+<div class="col-md-6 col-md-offset-3" id="login">
+<a class="link1" href="/add">Add Movies</a>
+<a class="link2" href="/remove">Remove Movies</a>
+<form action="/update1" method="POST">
+
+<div class="form-group">
+<label class="user"> MovieName:  </label>
+
+
+<input type="text" class="form-control" id="text1" name="moviename" placeholder="Moviename" value="{{moviename}}" required>
+</div>
+
+
+<div class="form-group">
+<label class="user"> Actor1: </label>
+
+<input type="text" class="form-control" id="text2" name="actor1" placeholder=" EnterActor1" value="{{actor1}}" required>
+
+</div>
+<div class="form-group">
+<label class="user"> Actor2: </label>
+
+<input type="text" class="form-control" id="text3" name="actor2" placeholder=" EnterActor2"value="{{actor2}}" required>
+
+</div>
+
+<div class="form-group">
+<label class="user"> Actor3: </label>
+<input type="text" class="form-control" id="text4" name="actor3" placeholder=" EnterActor3" value="{{actor3}}"required>
+</div>
+
+<div class="form-group">
+<label class="user">DirectorName: </label>
+<input type="text" class="form-control" id="text5" name="directorname" placeholder=" EnterDirectorName" value="{{director}}" required>
+</div>
+
+
+
+<div class="form-group label_001" >
+<label class="" required> Genre: </label>
+{% for i in genres %}
+{% if i == "Crime" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Crime" checked>Crime</label>
+{% endif %}
+{% if i == "Action" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Action" checked>Action</label>
+{% endif %}
+{% if i == "Thriller" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Thriller" checked>Thriller</label>
+{% endif %}
+{% if i == "Romance" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Romance" checked>Romance</label>
+{% endif %}
+{% if i == "Sci-Fi" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sci-Fi" checked>Sci-Fi</label>
+{% endif %}
+{% if i == "Fantasy" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Fantasy" checked>Fantasy</label>
+{% endif %}
+{% if i == "Documentary" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Documentary" checked>Documentary</label>
+{% endif %}
+{% if i == "Comedy" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Comedy" checked>Comedy</label>
+{% endif %}
+{% if i == "Drama" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Drama" checked>Drama</label>
+{% endif %}
+{% if i == "Family" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Family" checked>Family</label>
+{% endif %}
+{% if i == "Sports" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sports" checked>Sports</label>
+{% endif %}
+{% if i == "Adventure" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Adventure" checked>Adventure</label>
+{% endif %}
+{% if i == "Horror" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Horror" checked>Horror</label>
+{% endif %}
+{% if i == "Horror" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Mystery" checked>Mystery</label>
+{% endif %}
+{% endfor %}
+{% for i in new_li %}
+{% if i == "Crime" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Crime" >Crime</label>
+{% endif %}
+{% if i == "Action" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Action" >Action</label>
+{% endif %}
+{% if i == "Thriller" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Thriller" >Thriller</label>
+{% endif %}
+{% if i == "Romance" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Romance" >Romance</label>
+{% endif %}
+{% if i == "Sci-Fi" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sci-Fi" >Sci-Fi</label>
+{% endif %}
+{% if i == "Fantasy" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Fantasy" >Fantasy</label>
+{% endif %}
+{% if i == "Documentary" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Documentary" >Documentary</label>
+{% endif %}
+{% if i == "Comedy" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Comedy" >Comedy</label>
+{% endif %}
+{% if i == "Drama" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Drama" >Drama</label>
+{% endif %}
+{% if i == "Family" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Family" >Family</label>
+{% endif %}
+{% if i == "Sports" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sports" >Sports</label>
+{% endif %}
+{% if i == "Adventure" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Adventure" >Adventure</label>
+{% endif %}
+{% if i == "Horror" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Horror" >Horror</label>
+{% endif %}
+{% if i == "Mystery" %}
+	<label class="radio-inline"><input type="checkbox" name="optradio" value="Mystery" >Mystery</label>
+{% endif %}
+
+{% endfor %}
+</div>
+
+
+<div class="form-group">
+
+<input type="submit" class="btn btn-success" value="submit" style="border-radius:0px;">
+<input type="reset" class="btn btn-danger" value="Reset" style="border-radius:0px;">
+
+    </div>
+    <br/><br/><br/>
+</form>
+{% if error %}
+	<script>
+		alert("{{error}}")
+	</script>
+{% endif %}
+<!-- {% if movie_added %}
+	<script>
+		alert("Movie added successfully")
+	</script>
+{% endif %} -->
+</div>
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</body>
+	</html>
