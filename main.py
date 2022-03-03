@@ -16,6 +16,7 @@ filename = 'model.pkl'
 clf = pickle.load(open(filename, 'rb'))
 vectorizer = pickle.load(open('transform.pkl', 'rb'))
 
+
 def create_similarity():
     data = pd.read_csv('final_dataset1.csv')
     cv = CountVectorizer()
@@ -40,7 +41,7 @@ def recommend_movies(movie):
         for i in range(len(lst)):
             a = lst[i][0]
             l.append(data['movie_title'][a])
-        print("abc",l)
+        print("abc", l)
         return l
 
 
@@ -60,6 +61,8 @@ def convert_to_list_num(my_list):
 
 app = Flask(__name__)
 app.secret_key = 'abcde'
+
+
 @app.before_request
 def before_request():
     session.permanent = True
@@ -71,10 +74,14 @@ def before_request():
 def index():
     return redirect(url_for("login"))
 
+
 @app.route("/logout")
 def logout():
-    session.pop('user',None)
+    session.pop('user', None)
+    flash("Logged Out Successfully!")
     return redirect(url_for('login'))
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None
@@ -82,27 +89,74 @@ def login():
         if request.form['username'] != 'admin' or request.form['password'] != 'admin1234':
             error = 'Invalid Credentials. Please try again.'
         else:
-            session['user'] = 'admin'
+            session['user'] = True
+            flash("Logged In Successfully")
             return redirect(url_for('welcome'))
     return render_template('login.html', error=error)
 
-@app.route("/welcome")
+
+@app.route("/welcome",methods=["GET","POST"])
 def welcome():
-    return render_template("welcome.html",error="Logged In Successfully")
+    if 'user' in session and request.method=="POST":
+        data = pd.read_csv("Added_movies.csv")
+        data1 = pd.read_csv("Removed_movies.csv")
+        data2 = pd.read_csv("Updated_movies.csv")
+        l = list(data.values)
+        m = list(data1.values)
+        n = list(data2.values)
+        return render_template("welcome.html", l=l, m=m, n=n)
+    elif 'user' in session:
+        data = pd.read_csv("Added_movies.csv")
+        data1 = pd.read_csv("Removed_movies.csv")
+        data2 = pd.read_csv("Updated_movies.csv")
+        l = list(data.values)
+        m = list(data1.values)
+        n = list(data2.values)
+        return render_template("welcome.html", l=l, m=m, n=n)
+    flash("Session Expired")
+    return redirect(url_for('login'))
+
+
+def similarity_score(s1, s2):
+    if len(s1) > len(s2):
+        s1, s2 = s2, s1
+
+    distances = range(len(s1) + 1)
+    for i2, c2 in enumerate(s2):
+        distances_ = [i2 + 1]
+        for i1, c1 in enumerate(s1):
+            if c1 == c2:
+                distances_.append(distances[i1])
+            else:
+                distances_.append(1 + min((distances[i1], distances[i1 + 1], distances_[-1])))
+        distances = distances_
+    return distances[-1]
+
+
 @app.route("/add", methods=["GET", "POST"])
 def loggedin():
     error = None
     movie_added = None
-    if request.method == "POST":
+    if request.method == "POST" and 'user' in session:
         # session["user"] = 'admin'
         moviename = request.form["moviename"]
-        moviename=moviename.lower()
+        moviename = moviename.lower()
         actor1 = request.form["actor1"]
         actor2 = request.form["actor2"]
         actor3 = request.form["actor3"]
         directorname = request.form["directorname"]
+        lang=request.form["lang"]
+        lang=lang.lower()
+        if lang=="yes":
+            lang='en'
+        elif lang=="no":
+            lang='hi'
+        else:
+            flash("Enter Only Yes or No")
+            return redirect(url_for('.add'))
         s = ""
-        genre = request.form.getlist('optradio')
+
+        genre = request.form.getlist('optradio[]')
         genre.sort()
         print(genre)
         for i in genre:
@@ -132,84 +186,193 @@ def loggedin():
         # df2={"director_name":directorname,"actor_1_name":actor1,"actor_2_name":actor2,"actor_3_name":actor3,"genres":s,"movie_title":moviename,"comb":s1}
         # df.loc[len(df.index)]=df2
         # df.to_csv('2019_Movie_data.csv',index=False)
-        df = pd.DataFrame(dataset)
-        df1 = df.loc[df["comb"] == s1]
-        if df1.empty:
+        dataset=pd.read_csv("final_dataset1.csv")
+        print(moviename)
+        print(directorname)
+        dataset = dataset[(dataset.movie_title == moviename) & (dataset.director_name == directorname)]
+        print(dataset)
+        if dataset.empty:
             field_names = ['director_name', 'actor_1_name', 'actor_2_name', 'actor_3_name', 'genres', 'movie_title',
                            'comb']
             with open('final_dataset1.csv', 'a', newline=None) as ds:
                 dict_writer = DictWriter(ds, fieldnames=field_names)
                 dict_writer.writerow(dict)
                 ds.close()
-            print("genre:", df1)
-            df1=pd.read_csv("final_dataset1.csv")
-            df1.to_csv("final_dataset1.csv",index=False)
+            df1 = pd.read_csv("final_dataset1.csv")
+            df1.to_csv("final_dataset1.csv", index=False)
             movie_added = "Movie added successfully!"
-            return render_template("loggedin.html", error=movie_added)
+            my_api_key = '04b9df5416d75be096abd805b24b47a1'
+            title = moviename
+            url = 'https://api.themoviedb.org/3/discover/movie?api_key='+my_api_key+'&with_text_query='+title+'&with_original_language='+lang
+            data = requests.get(url)
+            data = data.json()
+            global x
+            x = []
+            for obj in data['results']:
+                score = similarity_score(title, obj['title']);
+                id = obj['id']
+                x.append([score, id])
+            x.sort()
+            url = "https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US".format(
+                x[0][1])
+            data = requests.get(url)
+            data = data.json()
+            poster_path = data['poster_path']
+            if poster_path:
+                full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
+            else:
+                full_path="../static/notfound.jpg"
+            field_names1 = ['Title', 'ImgURL']
+            dict1 = {'Title': moviename, 'ImgURL': full_path}
+            with open('Added_movies.csv', 'a') as ds:
+                dict_writer = DictWriter(ds, fieldnames=field_names1)
+                dict_writer.writerow(dict1)
+                ds.close()
+            df = pd.read_csv("Added_movies.csv")
+            num_rows = df.count()[0]
+            if num_rows > 5:
+                df = df.iloc[1:, :]
+            df = df.drop_duplicates()
+            df.to_csv("Added_movies.csv", index=False)
+            df1 = pd.read_csv("Removed_movies.csv")
+            df1 = df1[df1.Title != moviename]
+            df1.to_csv("Removed_movies.csv", index=False)
+            flash("Movie Added Successfully!")
+            return render_template("loggedin.html")
         else:
-            error = 'Movie already exists.Please try adding another one!!'
-            print(error)
-            print("Movie already exist")
-            return render_template("loggedin.html", error=error)
-    return render_template("loggedin.html", error=None)
+            flash("Movie Exists Already!")
+            return render_template("loggedin.html")
+    elif 'user' in session:
+        return render_template("loggedin.html", error=None)
+    flash("Session Expired!")
+    return redirect(url_for('login'))
 
 
 @app.route("/remove", methods=["GET", "POST"])
 def remove():
     error = None
-    if (request.method == "POST"):
+    if (request.method == "POST" and 'user' in session):
         moviename = request.form["moviename"]
-        moviename=moviename.lower()
+        moviename = moviename.lower()
+        directorname = request.form["director"]
+        lang=request.form["lang"]
+        lang=lang.lower()
+        if lang=="yes":
+            lang='en'
+        elif lang=="no":
+            lang='hi'
+        else:
+            flash("Enter Yes or No in Language")
+            return redirect(url_for('remove'))
+        print(directorname)
         dataset = pd.read_csv('final_dataset1.csv')
         # # if moviename not in dataset['movie_title'].unique():
         # df=pd.DataFrame(dataset)
         # df1=df.loc[df["comb"]==s1]
         # if df1.empty:
-        if moviename not in dataset["movie_title"].unique():
-            return render_template("remove.html", error="No Such Movies In Dataset")
+        df = dataset[dataset["movie_title"] == moviename]
+        if df.shape[0]==0:
+            flash("No Such Movie In Dataset!")
+            return redirect(url_for('remove'))
+        elif df.shape[0] > 1:
+            print("inside")
+            print(df)
+            if directorname not in df["director_name"].unique():
+                flash("No Such Movie Exist In Dataset!")
+                return redirect(url_for('remove'))
+            else:
+                df = df[df["director_name"] == directorname]
+                dataset = dataset.drop(
+                    dataset[(dataset.movie_title == moviename) & (dataset.director_name == directorname)].index)
+                dataset.to_csv("final_dataset1.csv",index=False)
+                flash("Movie Deleted Successfully")
+                return redirect(url_for('remove'))
+        my_api_key = '04b9df5416d75be096abd805b24b47a1'
+        title = moviename
+        url = 'https://api.themoviedb.org/3/discover/movie?api_key=' + my_api_key + '&with_text_query=' + title + '&with_original_language=' + lang
+        data = requests.get(url)
+        data = data.json()
+        global x
+        x = []
+        for obj in data['results']:
+            score = similarity_score(title, obj['title']);
+            id = obj['id']
+            x.append([score, id])
+        x.sort()
+        url = "https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US".format(
+            x[0][1])
+        data = requests.get(url)
+        data = data.json()
+        poster_path = data['poster_path']
+        if poster_path:
+            full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
+        else:
+            full_path = "../static/notfound.jpg"
+        field_names1 = ['Title', 'ImgURL']
+        dict1 = {'Title': moviename, 'ImgURL': full_path}
+        with open('Removed_movies.csv', 'a') as ds:
+            dict_writer = DictWriter(ds, fieldnames=field_names1)
+            dict_writer.writerow(dict1)
+            ds.close()
+        df = pd.read_csv("Removed_movies.csv")
+        num_rows = df.count()[0]
+        if num_rows > 5:
+            df = df.iloc[1:, :]
+        df = df.drop_duplicates()
+        df.to_csv("Removed_movies.csv", index=False)
+        df1 = pd.read_csv("Added_movies.csv")
+        df1 = df1[df1.Title != moviename]
+        df1.to_csv("Added_movies.csv", index=False)
         dataset.drop(dataset.loc[dataset['movie_title'] == moviename].index, inplace=True)
         dataset.to_csv("final_dataset1.csv", index=False)
-        return render_template("remove.html", error="Deleted Successfully")
-    return render_template("remove.html", error=error)
+        flash("Deleted Movie Successfully!")
+        return redirect(url_for('remove'))
+    elif 'user' in session:
+        return render_template("remove.html", error=None)
+    flash("Session Expired!")
+    return redirect(url_for('login'))
 
 
 @app.route("/update", methods=["GET", "POST"])
 def update():
-    if request.method == "POST":
+    if request.method == "POST" and 'user' in session:
         moviename = request.form["moviename"]
-        moviename=moviename.lower()
+        moviename = moviename.lower()
+        director=request.form["directorname"]
         df = pd.read_csv("final_dataset1.csv")
-        if moviename not in df["movie_title"].unique():
-            return render_template("update_movie_search.html", error="No Such Movie In Database")
+        df1=df[(df.movie_title == moviename) & (df.director_name == director)]
+        if df1.shape[0]==0:
+            flash("No Such Movie Exist In Dataset!")
+            return redirect(url_for('update'))
         df = df.loc[df["movie_title"] == moviename]
         actor1 = df["actor_1_name"].iloc[0]
         actor2 = df["actor_2_name"].iloc[0]
         actor3 = df["actor_3_name"].iloc[0]
         director = df["director_name"].iloc[0]
         genres = df["genres"].iloc[0]
-        genres1=genres
+        genres1 = genres
         genres = genres.split(" ")
         li = ["Crime", "Action", "Thriller", "Romance", "Sci-Fi", "Fantasy", "Documentary", "Comedy", "Drama", "Family",
-              "Sports", "Adventure","Horror","Mystery"]
+              "Sports", "Adventure", "Horror", "Mystery"]
         new_li = list(set(li) - set(genres))
         print(genres)
         comb = df["comb"].iloc[0]
         # df = pd.read_csv("final_dataset1.csv")
         # df = df[df.movie_title != moviename]
         global movie
-        movie=moviename
+        movie = moviename
         global actor1_name
-        actor1_name=actor1
+        actor1_name = actor1
         global actor2_name
-        actor2_name=actor2
+        actor2_name = actor2
         global actor3_name
-        actor3_name=actor3
+        actor3_name = actor3
         global director_name
-        director_name=director
+        director_name = director
         global genres_of_movies
-        genres_of_movies=genres1
+        genres_of_movies = genres1
         global combination
-        combination=comb
+        combination = comb
 
         # df.column_name != whole string from the cell
         # now, all the rows with the column: Name and Value: "dog" will be deleted
@@ -217,26 +380,46 @@ def update():
         # df.to_csv("final_dataset1.csv", index=False)
         return render_template("update.html", moviename=moviename, actor1=actor1, actor2=actor2, actor3=actor3,
                                director=director, genres=genres, new_li=new_li)
-    return render_template("update_movie_search.html", error=None)
+    elif 'user' in session:
+        return render_template("update_movie_search.html")
+    flash("Session Expired!")
+    return render_template("login.html", error=None)
 
 
 @app.route("/update1", methods=["GET", "POST"])
 def update1():
-    if request.method == "POST":
+    if 'user' not in session:
+        flash("Session Expired!")
+        return redirect(url_for('login'))
+    elif request.method == "POST" and 'user' in session:
         moviename = request.form["moviename"]
-        moviename=moviename.lower()
+        moviename = moviename.lower()
         actor1 = request.form["actor1"]
         actor2 = request.form["actor2"]
         actor3 = request.form["actor3"]
         directorname = request.form["directorname"]
+        dataset=pd.read_csv("final_dataset1.csv")
+        dataset=dataset[(dataset.movie_title == moviename) & (dataset.director_name == directorname)]
+        if dataset.shape[0]>0:
+            flash("Movie Already Exist In Dataset")
+            return redirect(url_for('update'))
+        lang=request.form["lang"]
+        lang = lang.lower()
+        if lang == "yes":
+            lang = 'en'
+        elif lang == "no":
+            lang = 'hi'
+        else:
+            flash("Enter Yes or No in Language")
+            return redirect(url_for('remove'))
         s = ""
-        genre = request.form.getlist('optradio')
-        j=0
-        x=len(genre)-1
+        genre = request.form.getlist('optradio[]')
+        j = 0
+        z = len(genre) - 1
         for i in genre:
-            j+=1
+            j += 1
             s += i
-            if j<=x:
+            if j <= z:
                 s += " "
         dataset = pd.read_csv('final_dataset1.csv')
         # # if moviename not in dataset['movie_title'].unique():
@@ -253,13 +436,48 @@ def update1():
         s1 += directorname
         s1 += " "
         s1 += s
-        data=pd.read_csv("final_dataset1.csv")
-        findL = [director_name,actor1_name ,actor2_name,actor3_name,genres_of_movies,movie,combination]
-        replaceL = [directorname,actor1, actor2, actor3,s,moviename,s1]
-        data=data.replace(findL,replaceL)
-        data.to_csv("final_dataset1.csv",index=False)
-        return render_template("update.html", error="Movie Updated")
-    return render_template("update.html", error=None)
+        data = pd.read_csv("final_dataset1.csv")
+        findL = [director_name, actor1_name, actor2_name, actor3_name, genres_of_movies, movie, combination]
+        replaceL = [directorname, actor1, actor2, actor3, s, moviename, s1]
+        data = data.replace(findL, replaceL)
+        data.to_csv("final_dataset1.csv", index=False)
+        my_api_key = '04b9df5416d75be096abd805b24b47a1'
+        title = moviename
+        url = 'https://api.themoviedb.org/3/discover/movie?api_key=' + my_api_key + '&with_text_query=' + title + '&with_original_language=' + lang
+        data = requests.get(url)
+        data = data.json()
+        global x
+        x = []
+        for obj in data['results']:
+            score = similarity_score(title, obj['title']);
+            id = obj['id']
+            x.append([score, id])
+        x.sort()
+        url = "https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US".format(
+            x[0][1])
+        data = requests.get(url)
+        data = data.json()
+        poster_path = data['poster_path']
+        if poster_path:
+            full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
+        else:
+            full_path = "../static/notfound.jpg"
+        field_names1 = ['Title', 'ImgURL']
+        dict1 = {'Title': moviename, 'ImgURL': full_path}
+        with open('Updated_movies.csv', 'a') as ds:
+            dict_writer = DictWriter(ds, fieldnames=field_names1)
+            dict_writer.writerow(dict1)
+            ds.close()
+        df = pd.read_csv("Updated_movies.csv")
+        num_rows = df.count()[0]
+        if num_rows > 5:
+            df = df.iloc[1:, :]
+        df = df.drop_duplicates()
+        df.to_csv("Updated_movies.csv", index=False)
+        flash("Movie Updated Successfully!")
+        return redirect(url_for('update'))
+    elif 'user' in session:
+        return render_template("update_movie_search.html", error=None)
 
 
 @app.route('/')
@@ -338,7 +556,10 @@ def recommend():
             vector = vectorizer.transform(List)
             val = clf.predict(vector)
             sentiment.append('Positive' if val else 'Negative')
-            movie_reviews = {reviews[i]: sentiment[i] for i in range(len(reviews))}
+    global movie_reviews
+    movie_reviews = {reviews[i]: sentiment[i] for i in range(len(reviews))}
+    if movie_reviews is None:
+        movie_reviews = {}
     return render_template('recommend.html', title=title, poster=poster, overview=overview, vote_average=vote_average,
                            vote_count=vote_count, release_date=release_date, runtime=runtime, status=status,
                            genres=genres,

@@ -38,6 +38,7 @@
         class="form-group shadow-textarea"
         style="margin-top: 30px; text-align: center; color: aliceblue"
       >
+      <label style="color: #e50914;font-size: xx-large;">Enter Movie Name:</label>
         <input
           type="text"
           name="movie"
@@ -46,15 +47,28 @@
           autocomplete="off"
           placeholder="Enter the Movie Name"
           style="
-            background-color: rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 0, 0, 0.5);
             width: 35%;
-            color: white;
+            color: black;
+          "
+          required="required"
+        />
+        <label style="color: #e50914;font-size: xx-large;">Enter "Yes" If Movie is Hollywood "No" for Bollywood(Without Quotes):</label>
+        <input
+          type="text"
+          name="lang"
+          class="movie form-control"
+          id="autoComplete1"
+          autocomplete="off"
+          placeholder="Type Yes for English Movies or No for Hindi Movies"
+          style="
+            width: 25%;
+            color: black;
           "
           required="required"
         />
         <!-- <br /> -->
       </div>
+      <br>
       <div class="form-group" style="text-align: center">
         <button
           class="btn btn-primary btn-block movie-button"
@@ -77,7 +91,7 @@
       <center>
         <h3>
           Sorry! The movie you requested is not in our database. Please check
-          the spelling or try with other movies!
+          the spelling or Language Parameter is entered correctly or try with other movies!
         </h3>
       </center>
     </div>
@@ -95,7 +109,22 @@
     <div class="admin_login">
       <center>
         <h3 style="color: #e50914;">Are You Admin?Login Here</h3>
-        <a href="/admin" style="text-align: center;color:aliceblue;" class="btn btn-sm btn-dark btn-block">Admin Login</a>
+        <br>
+        <div class="form-group" style="text-align: center">
+        <button
+          class="btn btn-primary btn-block movie-button"
+          style="
+            background-color: #e50914;
+            text-align: center;
+            border-color: #e50914;
+            width: 120px;
+            border-radius: 5px;
+          "
+          disabled="true"
+        >
+          <a href="/admin" style="text-decoration: none;color: aliceblue;">Admin Login</a></button
+        ><br /><br />
+      </div>
       </center>
     </div>
   </body>

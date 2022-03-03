@@ -19,38 +19,66 @@
 <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 
 <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='effect.css')}}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+jQuery(function($) {
+  var requiredCheckboxes = $(':checkbox[required]');
+  requiredCheckboxes.on('change', function(e) {
+    var checkboxGroup = requiredCheckboxes.filter('[name="' + $(this).attr('name') + '"]');
+    var isChecked = checkboxGroup.is(':checked');
+    checkboxGroup.prop('required', !isChecked);
+  });
+  requiredCheckboxes.trigger('change');
+});
+</script>
 </head>
 <style>
+    body{
+      background-image: url('../static/5550753.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      
+    }
 ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
+  background-color: rgba(0, 0, 0,0.15);
 }
 
 li {
   float: left;
+  /* border-right:1px solid #bbb; */
+}
+
+li:last-child {
+  border-right: none;
 }
 
 li a {
   display: block;
-  color: white;
+  color: rgb(20, 167, 44);
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
 }
 
-/* Change the link color to #111 (black) on hover */
-li a:hover {
+li a:hover:not(.active) {
   background-color: #111;
+}
+
+.active {
+  background-color: #04AA6D;
 }
 </style>
 <body>
 <ul>
-  <li><a href="/remove">Remove Movies</a></li>
-  <li><a href="/add">Add Movies</a></li>
-  <li style="float:right"><a class="active" href="/logout">Log Out</a></li>
+      <li><a href="/welcome">Welcome Admin</a></li>
+  <li style="float:right"><a href="/logout">Log Out</a></li>
+  <li style="float:right"><a href="/update">Update Movies</a></li>
+  <li style="float:right"><a href="/remove">Delete Movies</a></li>
+  <li style="float:right"><a href="/add">Add Movies</a></li>
 </ul>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -80,31 +108,36 @@ li a:hover {
 <label class="user"> MovieName:  </label>
 
 
-<input type="text" class="form-control" id="text1" name="moviename" placeholder="Moviename" value="{{moviename}}" required>
+<input type="text" style="
+            color: #e50114;" class="form-control" id="text1" name="moviename" placeholder="Moviename" value="{{moviename}}" required>
 </div>
 
 
 <div class="form-group">
 <label class="user"> Actor1: </label>
 
-<input type="text" class="form-control" id="text2" name="actor1" placeholder=" EnterActor1" value="{{actor1}}" required>
+<input type="text" style="
+            color: #e50114;" class="form-control" id="text2" name="actor1" placeholder=" EnterActor1" value="{{actor1}}" required>
 
 </div>
 <div class="form-group">
 <label class="user"> Actor2: </label>
 
-<input type="text" class="form-control" id="text3" name="actor2" placeholder=" EnterActor2"value="{{actor2}}" required>
+<input type="text" style="
+            color: #e50114;" class="form-control" id="text3" name="actor2" placeholder=" EnterActor2"value="{{actor2}}" required>
 
 </div>
 
 <div class="form-group">
 <label class="user"> Actor3: </label>
-<input type="text" class="form-control" id="text4" name="actor3" placeholder=" EnterActor3" value="{{actor3}}"required>
+<input type="text"style="
+            color: #e50114;" class="form-control" id="text4" name="actor3" placeholder=" EnterActor3" value="{{actor3}}"required>
 </div>
 
 <div class="form-group">
 <label class="user">DirectorName: </label>
-<input type="text" class="form-control" id="text5" name="directorname" placeholder=" EnterDirectorName" value="{{director}}" required>
+<input type="text" style="
+            color: #e50114;" class="form-control" id="text5" name="directorname" placeholder=" EnterDirectorName" value="{{director}}" required>
 </div>
 
 
@@ -113,95 +146,99 @@ li a:hover {
 <label class="" required> Genre: </label>
 {% for i in genres %}
 {% if i == "Crime" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Crime" checked>Crime</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Crime" checked required="required">Crime</label>
 {% endif %}
 {% if i == "Action" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Action" checked>Action</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Action" checked required="required">Action</label>
 {% endif %}
 {% if i == "Thriller" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Thriller" checked>Thriller</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Thriller" checked required="required">Thriller</label>
 {% endif %}
 {% if i == "Romance" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Romance" checked>Romance</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Romance" checked required="required">Romance</label>
 {% endif %}
 {% if i == "Sci-Fi" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sci-Fi" checked>Sci-Fi</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Sci-Fi" checked required="required">Sci-Fi</label>
 {% endif %}
 {% if i == "Fantasy" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Fantasy" checked>Fantasy</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Fantasy" checked required="required">Fantasy</label>
 {% endif %}
 {% if i == "Documentary" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Documentary" checked>Documentary</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Documentary" checked required="required">Documentary</label>
 {% endif %}
 {% if i == "Comedy" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Comedy" checked>Comedy</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Comedy" checked required="required">Comedy</label>
 {% endif %}
 {% if i == "Drama" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Drama" checked>Drama</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Drama" checked required="required">Drama</label>
 {% endif %}
 {% if i == "Family" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Family" checked>Family</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Family" checked required="required">Family</label>
 {% endif %}
 {% if i == "Sports" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sports" checked>Sports</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Sports" checked required="required">Sports</label>
 {% endif %}
 {% if i == "Adventure" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Adventure" checked>Adventure</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Adventure" checked required="required">Adventure</label>
 {% endif %}
 {% if i == "Horror" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Horror" checked>Horror</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Horror" checked required="required">Horror</label>
 {% endif %}
 {% if i == "Horror" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Mystery" checked>Mystery</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Mystery" checked required="required">Mystery</label>
 {% endif %}
 {% endfor %}
 {% for i in new_li %}
 {% if i == "Crime" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Crime" >Crime</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Crime" required="required" >Crime</label>
 {% endif %}
 {% if i == "Action" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Action" >Action</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Action" required="required">Action</label>
 {% endif %}
 {% if i == "Thriller" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Thriller" >Thriller</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Thriller" required="required">Thriller</label>
 {% endif %}
 {% if i == "Romance" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Romance" >Romance</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Romance" required="required">Romance</label>
 {% endif %}
 {% if i == "Sci-Fi" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sci-Fi" >Sci-Fi</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Sci-Fi" required="required">Sci-Fi</label>
 {% endif %}
 {% if i == "Fantasy" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Fantasy" >Fantasy</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Fantasy" required="required">Fantasy</label>
 {% endif %}
 {% if i == "Documentary" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Documentary" >Documentary</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Documentary"required="required" >Documentary</label>
 {% endif %}
 {% if i == "Comedy" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Comedy" >Comedy</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Comedy" required="required">Comedy</label>
 {% endif %}
 {% if i == "Drama" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Drama" >Drama</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Drama"required="required" >Drama</label>
 {% endif %}
 {% if i == "Family" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Family" >Family</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Family" required="required">Family</label>
 {% endif %}
 {% if i == "Sports" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Sports" >Sports</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Sports" required="required">Sports</label>
 {% endif %}
 {% if i == "Adventure" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Adventure" >Adventure</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Adventure" required="required">Adventure</label>
 {% endif %}
 {% if i == "Horror" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Horror" >Horror</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Horror" required="required">Horror</label>
 {% endif %}
 {% if i == "Mystery" %}
-	<label class="radio-inline"><input type="checkbox" name="optradio" value="Mystery" >Mystery</label>
+	<label class="radio-inline"><input type="checkbox" name="optradio[]" value="Mystery"required="required" >Mystery</label>
 {% endif %}
 
 {% endfor %}
 </div>
-
+<div class="form-group label_001" >
+<label class="user" required> Language: </label>
+<input type="text" style="
+            color: #e50114;" class="form-control" id="text6" name="lang" placeholder=" Enter Movie Language" required>
+</div>
 
 <div class="form-group">
 

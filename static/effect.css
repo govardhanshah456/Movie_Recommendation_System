@@ -1,5 +1,5 @@
 body{
-	background-image:url('../static/5550753.jpg');
+	background-image:url('../static/R.jpg');
 	background-size:cover;
 	background-repeat:no-repeat;
 	height:150%;
@@ -8,7 +8,7 @@ body{
 }
 .link1{
 	/* padding-left: 30px; */
-	color:rgb(18, 211, 18);
+	color:rgb(20, 211, 18);
 	font-size:25px;
 	text-align: center;
 }
@@ -28,17 +28,18 @@ a:hover{
 	color:aqua;
 }
 #login-name{
-font-size: 65px;
+font-size: 32px;
 font-family: arabic typesetting;
 border-bottom-style: ridge;
-color:white;
+color:#e50114;
 
 }
 #login{
 background-color:rgba(13,13,13,0.2);
 min-height:700px;
 padding: 40px 80px 40px 80px;
-box-shadow: -10px -10px 9px #33cc33;
+margin:auto;
+box-shadow: -10px -10px 9px #e50114;
 
 }
 .user{
@@ -46,7 +47,7 @@ font-size: 29px;
 
 font-family: arabic typesetting;
 
-color: white;
+color: #e50114;
 
 
 
@@ -69,8 +70,9 @@ color: white;
 
 }
 
-#text1,#text2,#text3,#text4,#text5{
-
+#text1,#text2,#text3,#text4,#text5,#text6{
+	background-color: rgb(36, 36, 36);
+	border: 1px solid rgba(0, 0, 0, 1);
 	border-radius: 0;
 	height: 40px;
 }
