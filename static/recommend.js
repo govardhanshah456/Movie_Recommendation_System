@@ -1,28 +1,45 @@
 $(function() {
   // Button will be disabled until we type anything inside the input field
   const source = document.getElementById('autoComplete');
+  const source1 = document.getElementById('autoComplete1');
+  // const hidekaro=document.querySelector('.input-container');
   const inputHandler = function(e) {
     if(e.target.value==""){
       $('.movie-button').attr('disabled', true);
     }
     else{
+      const inputHandler1 = function(e) {
+    if(e.target.value==""){
+      $('.movie-button').attr('disabled', true);
+    }
+    else{
+      
       $('.movie-button').attr('disabled', false);
     }
   }
+      source1.addEventListener('input', inputHandler1);
+    }
+  }
   source.addEventListener('input', inputHandler);
-
   $('.movie-button').on('click',function(){
+    // hidekaro.style.display="none";
     var my_api_key = '04b9df5416d75be096abd805b24b47a1';
     var title = $('.movie').val();
     console.log(title);
     var lang=$('#autoComplete1').val();
     // console.log(Lang);
     lang=lang.toLowerCase();
-    if(lang=="yes")
+    if(lang=="en")
       lang='en';
-    else if(lang=="no")
+    else if(lang=="hi")
       lang='hi';
-    console.log(title);
+    else
+    {
+      alert("Please Enter en or hi only");
+      $('#autoComplete').val('');
+      $('#autoComplete1').val('');
+      windows.navigate("index.html");
+    }
     if (title=="") {
       $('.results').css('display','none');
       $('.fail').css('display','block');

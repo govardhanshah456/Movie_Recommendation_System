@@ -66,7 +66,7 @@ app.secret_key = 'abcde'
 @app.before_request
 def before_request():
     session.permanent = True
-    app.permanent_session_lifetime = datetime.timedelta(seconds=30)
+    app.permanent_session_lifetime = datetime.timedelta(minutes=30)
     session.modified = True
 
 
@@ -147,12 +147,10 @@ def loggedin():
         directorname = request.form["directorname"]
         lang=request.form["lang"]
         lang=lang.lower()
-        if lang=="yes":
-            lang='en'
-        elif lang=="no":
-            lang='hi'
+        if lang=="en" or lang=="hi":
+            pass
         else:
-            flash("Enter Only Yes or No")
+            flash("Enter Only en or hi")
             return redirect(url_for('.add'))
         s = ""
 
@@ -257,12 +255,12 @@ def remove():
         directorname = request.form["director"]
         lang=request.form["lang"]
         lang=lang.lower()
-        if lang=="yes":
+        if lang=="en":
             lang='en'
-        elif lang=="no":
+        elif lang=="hi":
             lang='hi'
         else:
-            flash("Enter Yes or No in Language")
+            flash("Enter en or hi in Language")
             return redirect(url_for('remove'))
         print(directorname)
         dataset = pd.read_csv('final_dataset1.csv')
@@ -399,18 +397,14 @@ def update1():
         actor3 = request.form["actor3"]
         directorname = request.form["directorname"]
         dataset=pd.read_csv("final_dataset1.csv")
-        dataset=dataset[(dataset.movie_title == moviename) & (dataset.director_name == directorname)]
-        if dataset.shape[0]>0:
-            flash("Movie Already Exist In Dataset")
-            return redirect(url_for('update'))
         lang=request.form["lang"]
         lang = lang.lower()
-        if lang == "yes":
+        if lang == "en":
             lang = 'en'
-        elif lang == "no":
+        elif lang == "hi":
             lang = 'hi'
         else:
-            flash("Enter Yes or No in Language")
+            flash("Enter en or hi in Language")
             return redirect(url_for('remove'))
         s = ""
         genre = request.form.getlist('optradio[]')

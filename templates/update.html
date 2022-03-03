@@ -109,7 +109,7 @@ li a:hover:not(.active) {
 
 
 <input type="text" style="
-            color: #e50114;" class="form-control" id="text1" name="moviename" placeholder="Moviename" value="{{moviename}}" required>
+            color: #e50114;background-color: aliceblue;" class="form-control" id="text1" name="moviename" placeholder="Moviename" value="{{moviename}}" readonly required>
 </div>
 
 
@@ -137,7 +137,7 @@ li a:hover:not(.active) {
 <div class="form-group">
 <label class="user">DirectorName: </label>
 <input type="text" style="
-            color: #e50114;" class="form-control" id="text5" name="directorname" placeholder=" EnterDirectorName" value="{{director}}" required>
+            color: #e50114;background-color: aliceblue;" class="form-control" id="text5" name="directorname" placeholder=" EnterDirectorName" value="{{director}}" readonly required>
 </div>
 
 
@@ -235,7 +235,7 @@ li a:hover:not(.active) {
 {% endfor %}
 </div>
 <div class="form-group label_001" >
-<label class="user" required> Language: </label>
+<label class="user" required> Language('en' For English 'hi' For Hindi(Without Quotes)): </label>
 <input type="text" style="
             color: #e50114;" class="form-control" id="text6" name="lang" placeholder=" Enter Movie Language" required>
 </div>
