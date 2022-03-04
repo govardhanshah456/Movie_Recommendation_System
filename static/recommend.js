@@ -102,6 +102,7 @@ function load_details(my_api_key,title,lang){
           }
         }
         if(flag==0){
+          alert("We dont have the same movie name in our database. Based on your keywords we found this.")
           movie_title = Object.keys(close_match).reduce(function(a, b){ return close_match[a] > close_match[b] ? a : b });
           var index = Object.keys(close_match).indexOf(movie_title)
           movie_id = movie.results[index].id;
